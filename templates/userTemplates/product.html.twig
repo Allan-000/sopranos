@@ -1,0 +1,11 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+<div class="container pt-4 d-flex flex-column justify-content-center align-items-center">
+    <div class="card w-50">
+        <p class="card-title card-header text-center"><b>{{product.name}}</b></p>
+        <img class="img-fluid card-body rounded py-3 w-75 m-auto" src="/img/{{product.picture}}" alt="{{product.name}} afbeelding">
+        <p class="text-center card-footer m-0">{{product.description}}</p>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,54 @@
+.custom-img{
+    height: 50px;
+}
+
+.home-body{
+    height: 70vh;
+}
+
+.navbar{
+    padding: 0;
+}
+
+.home-page{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    height: 80vh;
+}
+
+.home-page h4{
+    background-color: rgb(226, 225, 225);
+    padding: 1em;
+    border-radius: 30px;
+    box-shadow: 20px 20px 100px gray;
+    animation-name: homeh4anim;
+    animation-duration: 3500ms;
+    animation-fill-mode: forwards;
+}
+
+@keyframes homeh4anim {
+    0%{opacity: 0;transition: 500ms;}
+    100%{opacity: 1;transition: 500ms;}    
+}
+
+.home-page p{
+    text-align: center;
+    animation-name: homeP;
+    animation-duration: 3500ms;
+    animation-fill-mode: forwards;
+}
+
+@keyframes homeP {
+    0%{position:relative;right: 3000px;transition: 1500ms;}
+    100%{position: relative;right: 0px;transition: 1500ms;}
+}
+
+.home-page button{
+    animation-name: homeh4anim;
+    animation-delay: 4000ms;
+    animation-duration: 4000ms;
+    animation-fill-mode: forwards;
+    opacity: 0;
+}

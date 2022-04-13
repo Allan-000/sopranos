@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="row">
+    {% for product in products %}
+        <div class="col-lg-4 pt-5">
+            <div class="card h-100">
+                <p class="card-title card-header text-center"><b>{{product.name}}</b></p>
+                <img class="img-fluid card-body rounded py-3 h-75 m-auto" src="/img/{{product.picture}}" alt="{{product.name}} afbeelding">
+                <div class="m-auto py-3">
+                    <a class="link-warning border p-1 border-warning border-1 text-decoration-none" href="/product/{{product.id}}">bestellen</a>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</body>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title%}Home{% endblock %}
+
+{# body #}
+{% block body %}
+
+<div class='home-body container'>
+    <div class='row mt-5'>
+        {% for category in categories %}
+        <div class="col col-lg-4 col-sm-12">
+            <div class=" card h-100">
+                <div class="card-body">
+                <h3 class="card-title card-header text-center">{{category.name}}</h3>
+                <img class="card-img card-body" src="/img/{{category.picture}}">
+                </div>
+                <div class="card-footer d-flex justify-content-center">
+                    <button class="btn btn-warning"><a href="/category/{{category.id}}" class="text-dark text-decoration-none"> bekijk alle {{category.name}} pizza's .</a></button>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}
+
+
