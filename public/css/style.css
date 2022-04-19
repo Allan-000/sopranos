@@ -52,3 +52,8 @@
     animation-fill-mode: forwards;
     opacity: 0;
 }
+
+.shooping-basket{
+    height: 50px;
+    width: 50px;
+}

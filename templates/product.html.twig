@@ -9,14 +9,9 @@
         
     </div>
     <div class="container pt-5 w-25">
-    {% if is_granted(ROLE_USER) %}
         {{ form_start(form) }}
         {{ form_widget(form) }}
         {{ form_end(form) }}
-        {% else %}
-        <a href="/register"></a>
-    {% endif %}
-        
-        </div>
+    </div>
 </div>
 {% endblock %}

@@ -30,8 +30,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string')]
     private $password;
 
-    #[ORM\Column(type: 'json')]
-    private $gender = [];
+    // #[ORM\Column(type: 'json')]
+    // private $gender = [];
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Orders::class)]
     private $product;
@@ -123,17 +123,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
-    public function getGender(): ?array
-    {
-        return $this->gender;
-    }
+    // public function getGender(): ?array
+    // {
+    //     return $this->gender;
+    // }
 
-    public function setGender(array $gender): self
-    {
-        $this->gender = $gender;
+    // public function setGender(array $gender): self
+    // {
+    //     $this->gender = $gender;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     /**
      * @return Collection<int, Orders>
