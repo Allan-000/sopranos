@@ -27,6 +27,9 @@ class Orders
     #[ORM\Column(type: 'decimal', precision: 7, scale: 2)]
     private $total_price;
 
+    #[ORM\ManyToOne(targetEntity: Size::class, inversedBy: 'orders')]
+    private $size;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -76,6 +79,18 @@ class Orders
     public function setTotalPrice(string $total_price): self
     {
         $this->total_price = $total_price;
+
+        return $this;
+    }
+
+    public function getSize(): ?size
+    {
+        return $this->size;
+    }
+
+    public function setSize(?size $size): self
+    {
+        $this->size = $size;
 
         return $this;
     }

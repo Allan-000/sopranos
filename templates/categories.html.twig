@@ -15,7 +15,11 @@
                 <img class="card-img card-body" src="/img/{{category.picture}}">
                 </div>
                 <div class="card-footer d-flex justify-content-center">
+                    {% if is_granted('ROLE_USER') %}
+                    <button class="btn btn-warning"><a href="/user/category/{{category.id}}" class="text-dark text-decoration-none"> bekijk alle {{category.name}} pizza's .</a></button>
+                    {% else %}
                     <button class="btn btn-warning"><a href="/category/{{category.id}}" class="text-dark text-decoration-none"> bekijk alle {{category.name}} pizza's .</a></button>
+                    {% endif %}
                 </div>
             </div>
         </div>

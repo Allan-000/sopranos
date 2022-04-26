@@ -8,7 +8,11 @@
                 <p class="card-title card-header text-center"><b>{{product.name}}</b></p>
                 <img class="img-fluid card-body rounded py-3 h-75 m-auto" src="/img/{{product.picture}}" alt="{{product.name}} afbeelding">
                 <div class="m-auto py-3">
-                    <a class="link-warning border p-1 border-warning border-1 text-decoration-none" href="/product/{{product.id}}">bestellen</a>
+                {% if is_granted('ROLE_USER') %}
+                    <a class="link-warning border p-1 border-warning border-1 text-decoration-none text-dark" href="/user/product/{{product.id}}">bestellen</a>
+                {% else %}
+                    <a class="link-warning border p-1 border-warning border-1 text-decoration-none text-dark" href="/product/{{product.id}}">bestellen</a>
+                {% endif %}
                 </div>
             </div>
         </div>

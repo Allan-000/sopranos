@@ -23,7 +23,26 @@
                       <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-auto">
+                    {% if is_granted('ROLE_USER') %}
+                        <ul class="navbar-nav ms-auto">
+                    <li class="nav-item d-flex align-items-center">
+                        <a class="nav-link text-dark" aria-current="page" href="/user/profile">Mijn profile</a>
+                    </li>
+                    <li class="nav-item d-flex align-items-center">
+                        <a class="nav-link text-dark" href="/user/categories">Pizza's</a>
+                    </li>
+                    <li class="nav-item d-flex align-items-center">
+                        <a class="nav-link text-dark" href="#">Contact</a>
+                    </li>
+                    <li class="nav-item d-flex align-items-center">
+                        <a class="nav-link text-dark" href="/user/shoppingCard"><img class="shooping-basket" src="{{asset('img/icons8-basket-100.png')}}" alt=""></a>
+                    </li>
+                    <li class="nav-item d-flex align-items-center">
+                        <a class="nav-link text-dark" href="/logout">uitloggen</a>
+                    </li>
+                </ul>
+                    {% else %}
+                       <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
                             <a class="nav-link text-dark" aria-current="page" href="/">Home</a>
                         </li>
@@ -39,7 +58,9 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" href="/login">Inloggen</a>
                         </li>
-                    </ul>
+                    </ul> 
+                    {% endif %}
+                    
                 </div>
             </div>
         </nav>
@@ -49,7 +70,7 @@
     {# footer #}
     <footer>
     {% block footer %}
-    <div class="container fixed-bottom">
+    <div class="container mt-3">
         <p class="text-light p-2 rounded bg-dark text-center">Sopranos | Allan Hassan - ROC Mondriaan -2022 ©</p>
     </div>
     {% endblock %}

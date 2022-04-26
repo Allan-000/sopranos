@@ -1,0 +1,21 @@
+{% extends "base.html.twig" %}
+{% if is_granted('ROLE_USER') %}
+    {% set userName = user.name %}
+{% else %}
+    {% set userName = 'user' %}
+{% endif %}
+
+{% block title %}Sopranos | Hoi {{userName}}{% endblock %} 
+
+{% block body %}
+
+{% if is_granted('ROLE_USER') %}
+<h2 class="text-center pt-4">Welkom {{user.name}}</h2>
+{% else %}
+    <div class="container w-75 pt-5">
+        <h4 class="text-center">Oeps.. Er is een fout opgetreden, <a href="/login">Inloggen</a></h4>
+    </div>
+{% endif %}
+{% endblock %}
+
+

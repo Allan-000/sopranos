@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Category;
 use App\Entity\Orders;
 use App\Entity\Product;
+use App\Entity\Size;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
 use Symfony\Component\Routing\Annotation\Route;
@@ -12,11 +13,13 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class AppController extends AbstractController
 
@@ -31,6 +34,7 @@ class AppController extends AbstractController
 
     /**
      * @Route("/categories")
+     * @Route("/user/categories")
      */
     public function showCategories(EntityManagerInterface $em){
         $categories = $em->getRepository(Category::class)->findAll();
@@ -42,6 +46,7 @@ class AppController extends AbstractController
 
     /**
      * @Route("/category/{id}", methods={"GET","head"})
+     * @Route("/user/category/{id}", methods={"GET","head"})
      */
     public function showProducts(int $id, EntityManagerInterface $em){
         $products=$em->getRepository(Product::class)->findBy(array('category' => $id));
@@ -53,25 +58,53 @@ class AppController extends AbstractController
 
     /**
      * @Route("/product/{id}"), methods={"GET","head"}
+     * @Route("/user/product/{id}"), methods={"GET","head"}
      */
     public function showProduct(int $id,EntityManagerInterface $em,Request $request){
+
+        //get the sizes of the pizza's
+        $sizes=$em->getRepository(Size::class)->findAll();
+        //get product to display in twig temp
         $product=$em->getRepository(Product::class)->find($id);
         
         $order=new Orders();
 
         $form=$this->createFormBuilder($order)
-            ->add('amount',NumberType::class , ['attr' => ['class' => 'form-control my-3'],'label'=>'Hoeveel wilt u bestellen :'])
+            ->add('amount',NumberType::class , ['attr' => [
+                'class'=>'form-control',
+                'placeholder' => 'Voer amount in'
+            ]])
+            ->add('size', ChoiceType::class,
+                ['choices' => [
+                    'klein' => $sizes[0],
+                    'gemiddeld' => $sizes[1],
+                    'groot' => $sizes[2]
+                ],
+                'attr'=>[
+                    'class'=>'form-control'
+                ]
+                ]
+            )
             ->add('submit',SubmitType::class, ['attr' => ['class' => 'btn btn-primary d-block m-auto'],'label'=>'toevoegen'])
             ->getForm();
 
         $form->handleRequest($request);    
+
         if($form->isSubmitted() && $form->isValid()){
-            return $this->redirectToRoute('homePage');
+            if( $this->isGranted('ROLE_USER')){
+                //here flush data to database
+                return $this->redirectToRoute('userHome');
+            }
+            else{
+                $error="<script>alert('Je moet inloggen om bestelling te plaatsen')</script>";
+                echo $error;
+                return $this->redirectToRoute('app_login');
+            }
         }
-
-
+        
         return $this->render('product.html.twig',[
             'product' => $product,
+            'sizes' => $sizes,
             'form' => $form->createView()
         ]);
     }
@@ -107,12 +140,37 @@ class AppController extends AbstractController
     }
 
     /**
+     * @Route("login" , name="app_login")
+     */
+    public function login(AuthenticationUtils $authenticationUtils): Response
+    {
+        // if ($this->getUser()) {
+        //     return $this->redirectToRoute('target_path');
+        // }
+
+        // get the login error if there is one
+        $error = $authenticationUtils->getLastAuthenticationError();
+        // last username entered by the user
+        $lastUsername = $authenticationUtils->getLastUsername();
+
+        return $this->render('login/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
+    }
+    /**
+     * @Route("logout" , name="app_logout")
+     */
+    public function logout(): void
+    {
+        throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
+    }
+
+    /**
      * @Route("/user", name="userHome")
      */
     public function userMain(){
         $user=$this->getUser();
-
-        return $this->render('userProfile.html.twig',[
+        $userId=$user->getId();
+        
+        return $this->render('userHome.html.twig',[
             'user' => $user
         ]);
     }
