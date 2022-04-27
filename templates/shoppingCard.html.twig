@@ -1,0 +1,76 @@
+{% extends "base.html.twig" %}
+{% block body %}
+{% set totaal = 0 %}
+{% set price = ''%}
+
+{% if orders[0].user is defined %}
+     <div class="container">
+<table class="table table-bordered table-hover mt-5">
+  <thead>
+    <tr>
+      <th scope="col">Klant id:</th>
+      <th scope="col">Klant naam:</th>
+      <th scope="col">Bestellingen:</th>
+      <th scope="col">Hoeveelheid:</th>
+      <th scope="col">Prijs:</th>
+    </tr>
+  </thead>
+  <tbody>
+  
+    <tr>
+      <th scope="row">{{orders[0].user.id}}</th>
+      <td>{{orders[0].user.name}}</td>
+      {% for order in orders %}
+      <tr>
+        <td>
+        </td>
+        <td>
+        </td>
+        <td>
+            {{order.product.name}} ( {{order.size.size}} )
+        </td>
+        <td>
+            {{order.amount}}
+        </td>
+        <td>
+        {% if order.size.id == 1 %}
+            {% set price = order.product.price * 0.75 * order.amount %}
+        
+        {% elseif order.size.id == 2 %}
+            {% set price = order.product.price * 1 %}
+          
+        {% elseif order.size.id == 3 %}
+            {% set price = order.product.price * 1.25 %}
+        
+        {% endif %}
+            {{price}} €
+            {% set totaal = totaal + price %}
+        </td>
+      </tr>
+        
+      {% endfor %}
+      <tr>
+        <td>
+        </td>
+        <td>
+        </td>
+        <td>
+        </td>
+        <td>
+        </td>
+        <td>
+        <b>
+        totaal price: {{totaal}} €
+        </b>
+        </td>
+      </tr>
+    </tr>
+  </tbody>
+</table>
+</div> 
+{% else %}
+<p class="text-center pt-4">Hier ziet u overzicht van uw bestellingen</p>
+<p class="alert alert-warning text-center">u heeft nog bestellingen geplaatst? <a href="/user/categories">wilt u bestellen ?</a></p>
+{% endif %}
+
+{% endblock %}

@@ -8,6 +8,7 @@ use App\Entity\Product;
 use App\Entity\Size;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
+use Doctrine\ORM\EntityManager;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,7 +21,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-
 class AppController extends AbstractController
 
 {
@@ -64,15 +64,23 @@ class AppController extends AbstractController
 
         //get the sizes of the pizza's
         $sizes=$em->getRepository(Size::class)->findAll();
+
         //get product to display in twig temp
         $product=$em->getRepository(Product::class)->find($id);
-        
+
+        //get data of order
+        $productId=$product->getId();
+        $productPrice=$product->getPrice();
+        $user=$this->getUser();
+        $userId= (int)$user->getId();
         $order=new Orders();
+
 
         $form=$this->createFormBuilder($order)
             ->add('amount',NumberType::class , ['attr' => [
                 'class'=>'form-control',
-                'placeholder' => 'Voer amount in'
+                'placeholder' => 'Voer amount in',
+                'pattern' => '/^[0-9]{8}$/', 'maxlength' => 8
             ]])
             ->add('size', ChoiceType::class,
                 ['choices' => [
@@ -92,8 +100,13 @@ class AppController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid()){
             if( $this->isGranted('ROLE_USER')){
-                //here flush data to database
-                return $this->redirectToRoute('userHome');
+                //here flush data of order into database
+                $order->setUser($user);
+                $order->setProduct($product);
+                $order->setTotalPrice($productPrice);
+                $em->persist($order);
+                $em->flush();
+                return $this->redirectToRoute('shopping_card');
             }
             else{
                 $error="<script>alert('Je moet inloggen om bestelling te plaatsen')</script>";
@@ -106,6 +119,18 @@ class AppController extends AbstractController
             'product' => $product,
             'sizes' => $sizes,
             'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/user/shoppingCard", name="shopping_card")
+     */
+    public function viewShoppingCard(EntityManagerInterface $em){
+        $userId=$this->getUser()->getId();
+        
+        $orders=$em->getRepository(Orders::class)->findBy(array('user' => $userId));
+        return $this->render('shoppingCard.html.twig',[
+            'orders' => $orders
         ]);
     }
 
@@ -131,7 +156,7 @@ class AppController extends AbstractController
             $entityManager->flush();
             // do anything else you need here, like send an email
 
-            return $this->redirect('user');
+            return $this->redirect('login');
         }
         
         return $this->render('register.html.twig', [

@@ -47,12 +47,36 @@ class Orders
         return $this;
     }
 
+    public function getUserId(): ?int
+    {
+        return $this->user;
+    }
+
+    public function setUserId(?int $user): self
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
     public function getProduct(): ?product
     {
         return $this->product;
     }
 
     public function setProduct(?product $product): self
+    {
+        $this->product = $product;
+
+        return $this;
+    }
+
+    public function getProductId(): ?int
+    {
+        return $this->product;
+    }
+
+    public function setProductId(?int $product): self
     {
         $this->product = $product;
 
