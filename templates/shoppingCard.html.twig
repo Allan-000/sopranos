@@ -1,7 +1,6 @@
 {% extends "base.html.twig" %}
 {% block body %}
 {% set totaal = 0 %}
-{% set price = ''%}
 
 {% if orders[0].user is defined %}
      <div class="container">
@@ -33,21 +32,21 @@
             {{order.amount}}
         </td>
         <td>
+        
         {% if order.size.id == 1 %}
-            {% set price = order.product.price * 0.75 * order.amount %}
-        
-        {% elseif order.size.id == 2 %}
-            {% set price = order.product.price * 1 %}
-          
-        {% elseif order.size.id == 3 %}
-            {% set price = order.product.price * 1.25 %}
-        
+            {{(order.product.price * order.amount * 0.75)|round(2,'floor')}} €
+            {% set price = order.product.price * order.amount * 0.75 %}
+          {% elseif order.size.id == 2 %}
+            {{(order.product.price * order.amount)|round(2,'floor')}} €
+            {% set price = order.product.price * order.amount %}
+          {% elseif order.size.id == 3 %}
+          {{(order.product.price * order.amount * 1.25)|round(2,'floor')}} €
+            {% set price = order.product.price * order.amount * 1.25 %}
         {% endif %}
-            {{price}} €
-            {% set totaal = totaal + price %}
+        
         </td>
       </tr>
-        
+        {% set totaal = totaal + price %}
       {% endfor %}
       <tr>
         <td>
@@ -60,7 +59,7 @@
         </td>
         <td>
         <b>
-        totaal price: {{totaal}} €
+        totaal price: {{totaal|round(2,'floor')}} €
         </b>
         </td>
       </tr>

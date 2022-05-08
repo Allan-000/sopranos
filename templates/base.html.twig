@@ -26,19 +26,16 @@
                     {% if is_granted('ROLE_USER') %}
                         <ul class="navbar-nav ms-auto">
                     <li class="nav-item d-flex align-items-center">
-                        <a class="nav-link text-dark" aria-current="page" href="/user">Mijn profile</a>
+                        <a class="nav-link text-dark" aria-current="page" href="/user">Home</a>
                     </li>
                     <li class="nav-item d-flex align-items-center">
                         <a class="nav-link text-dark" href="/user/categories">Pizza's</a>
                     </li>
                     <li class="nav-item d-flex align-items-center">
-                        <a class="nav-link text-dark" href="#">Contact</a>
-                    </li>
-                    <li class="nav-item d-flex align-items-center">
                         <a class="nav-link text-dark" href="/user/shoppingCard"><img class="shooping-basket" src="{{asset('img/icons8-basket-100.png')}}" alt=""></a>
                     </li>
                     <li class="nav-item d-flex align-items-center">
-                        <a class="nav-link text-dark" href="/logout">uitloggen</a>
+                        <a class="nav-link text-dark" href="/logout">Uitloggen</a>
                     </li>
                 </ul>
                     {% else %}
@@ -50,10 +47,7 @@
                             <a class="nav-link text-dark" href="/categories">Pizza's</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" href="#">Contact</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" href="/register">Lid worden</a>
+                            <a class="nav-link text-dark" href="/register">Registreren</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" href="/login">Inloggen</a>

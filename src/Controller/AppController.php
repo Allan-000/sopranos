@@ -69,18 +69,17 @@ class AppController extends AbstractController
         $product=$em->getRepository(Product::class)->find($id);
 
         //get data of order
-        $productId=$product->getId();
+        
         $productPrice=$product->getPrice();
         $user=$this->getUser();
-        $userId= (int)$user->getId();
+        
         $order=new Orders();
 
 
         $form=$this->createFormBuilder($order)
             ->add('amount',NumberType::class , ['attr' => [
                 'class'=>'form-control',
-                'placeholder' => 'Voer amount in',
-                'pattern' => '/^[0-9]{8}$/', 'maxlength' => 8
+                'placeholder' => 'Voer amount in'
             ]])
             ->add('size', ChoiceType::class,
                 ['choices' => [
@@ -111,7 +110,7 @@ class AppController extends AbstractController
             else{
                 $error="<script>alert('Je moet inloggen om bestelling te plaatsen')</script>";
                 echo $error;
-                return $this->redirectToRoute('app_login');
+                return $this->redirectToRoute('register_page');
             }
         }
         
@@ -135,7 +134,7 @@ class AppController extends AbstractController
     }
 
     /**
-     * @Route("/register")
+     * @Route("/register" , name="register_page")
      */
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
     {
@@ -193,7 +192,7 @@ class AppController extends AbstractController
      */
     public function userMain(){
         $user=$this->getUser();
-        $userId=$user->getId();
+        // $userId=$user->getId();
         
         return $this->render('userHome.html.twig',[
             'user' => $user
