@@ -1,0 +1,71 @@
+{% extends "base.html.twig" %}
+{% block body %}
+<!-- Modal -->
+{# <div class="modal" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div> #}
+{% if orders %}
+{% for item in app.flashes('deleteSuccess') %}
+    <p class="alert alert-success text-center">{{item}}</p>
+{% endfor %}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th class="col">bestelling id:</th>
+            <th class="col">product id:</th>
+            <th class="col">gebruiker id:</th>
+            <th class="col">gebruiker naam:</th>
+            <th class="col">status:</th>
+            <th class="col d-flex justify-content-center">bestelling verwijderen:</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for order in orders %}
+        <tr class="">
+            <td>{{order.id}}</td>
+            <td>{{order.product.id}}</td>
+            <td>{{order.user.id}}</td>
+            <td>{{order.user.name}}</td>
+            
+            {# {{form_start(statusForm)}}
+            
+            {{form_end(statusForm)}} #}
+            <td>{{order.status}}</td>
+            </td>
+            <td class="d-flex justify-content-center">
+            <a href="/admin/orders/delete/{{order.id}}">
+                <img class="order-remove" height="30px" src="/img/remove.png" id={{order.id}} alt="">
+            </a>    
+            {# <button type="button" data-toggle="modal" data-target="#modal"> #}
+            </button>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div class="d-flex align-items-center justify-content-center">
+    <h4 class="alert alert-warning text-center">Momenteel zijn er geen orders te tonen.</h4>
+</div>
+{% endif %}    
+{% endblock %}
+{% block javascripts %}
+    <script src="{{ asset('js/main.js') }}" defer></script>
+{% endblock %}

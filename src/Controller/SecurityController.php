@@ -13,6 +13,7 @@ class SecurityController extends AbstractController
     // public function login(AuthenticationUtils $authenticationUtils): Response
     // {
     //     // if ($this->getUser()) {
+        // ROLE_ADMIN of ROLE_USER
     //     //     return $this->redirectToRoute('target_path');
     //     // }
 

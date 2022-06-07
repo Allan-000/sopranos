@@ -30,6 +30,9 @@ class Orders
     #[ORM\ManyToOne(targetEntity: Size::class, inversedBy: 'orders')]
     private $size;
 
+    #[ORM\Column(type: 'string', length: 255)]
+    private $status;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -115,6 +118,18 @@ class Orders
     public function setSize(?size $size): self
     {
         $this->size = $size;
+
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }

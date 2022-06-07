@@ -2,6 +2,7 @@
 <html>
     <head>
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{% block title %}Sopranos | Online pizza bestellen{% endblock %}</title>
         <link rel="icon" href="/img/pizza-logo.png">
         {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
@@ -25,19 +26,32 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     {% if is_granted('ROLE_USER') %}
                         <ul class="navbar-nav ms-auto">
-                    <li class="nav-item d-flex align-items-center">
-                        <a class="nav-link text-dark" aria-current="page" href="/user">Home</a>
-                    </li>
-                    <li class="nav-item d-flex align-items-center">
-                        <a class="nav-link text-dark" href="/user/categories">Pizza's</a>
-                    </li>
-                    <li class="nav-item d-flex align-items-center">
-                        <a class="nav-link text-dark" href="/user/shoppingCard"><img class="shooping-basket" src="{{asset('img/icons8-basket-100.png')}}" alt=""></a>
-                    </li>
-                    <li class="nav-item d-flex align-items-center">
-                        <a class="nav-link text-dark" href="/logout">Uitloggen</a>
-                    </li>
-                </ul>
+                            <li class="nav-item d-flex align-items-center">
+                                <a class="nav-link text-dark" aria-current="page" href="/user">Home</a>
+                            </li>
+                            <li class="nav-item d-flex align-items-center">
+                                <a class="nav-link text-dark" href="/user/categories">Pizza's</a>
+                            </li>
+                            <li class="nav-item d-flex align-items-center">
+                                <a class="nav-link text-dark" href="/user/shoppingCard"><img class="shooping-basket" src="{{asset('img/icons8-basket-100.png')}}" alt=""></a>
+                            </li>
+                            <li class="nav-item d-flex align-items-center">
+                                <a class="nav-link text-dark" href="/logout">Uitloggen</a>
+                            </li>
+                        </ul>
+                    {% elseif is_granted('ROLE_ADMIN')%}
+                        <ul class="navbar-nav ms-auto">
+                            <li class="nav-item d-flex align-items-center">
+                                <a class="nav-link text-dark" aria-current="page" href="/admin">Home</a>
+                            </li>
+                            <li class="nav-item d-flex align-items-center">
+                                <a class="nav-link text-dark" href="/admin/orders">bestellingen bekijken</a>
+                            </li>
+                            
+                            <li class="nav-item d-flex align-items-center">
+                                <a class="nav-link text-dark" href="/logout">Uitloggen</a>
+                            </li>
+                        </ul>
                     {% else %}
                        <ul class="navbar-nav ms-auto">
                         <li class="nav-item">

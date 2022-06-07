@@ -5,19 +5,17 @@ namespace App\Controller;
 use App\Entity\Category;
 use App\Entity\Orders;
 use App\Entity\Product;
+
 use App\Entity\Size;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
-use Doctrine\ORM\EntityManager;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
@@ -101,10 +99,12 @@ class AppController extends AbstractController
             if( $this->isGranted('ROLE_USER')){
                 //here flush data of order into database
                 $order->setUser($user);
+                $order->setStatus("pending");
                 $order->setProduct($product);
                 $order->setTotalPrice($productPrice);
                 $em->persist($order);
                 $em->flush();
+                $this->addFlash('succesMessege','Je bestelling is geplaatst.');
                 return $this->redirectToRoute('shopping_card');
             }
             else{
@@ -139,6 +139,7 @@ class AppController extends AbstractController
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
     {
         $user = new User();
+        // $userRole=$user->getRoles("ROLE_USER");
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
@@ -150,11 +151,12 @@ class AppController extends AbstractController
                     $form->get('plainPassword')->getData()
                 )
             );
-
+            //giving every new user the USER role as standard.
+            $user->setRoles(['ROLE_USER']);
             $entityManager->persist($user);
             $entityManager->flush();
             // do anything else you need here, like send an email
-
+            $this->addFlash('registerMessege','U bent succesvol geregistreerd.');
             return $this->redirect('login');
         }
         
@@ -171,7 +173,7 @@ class AppController extends AbstractController
         // if ($this->getUser()) {
         //     return $this->redirectToRoute('target_path');
         // }
-
+            
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
         // last username entered by the user
@@ -191,12 +193,70 @@ class AppController extends AbstractController
      * @Route("/user", name="userHome")
      */
     public function userMain(){
+        //checking the rule of the person and redirect tp the correct route
         $user=$this->getUser();
-        // $userId=$user->getId();
         
-        return $this->render('userHome.html.twig',[
-            'user' => $user
+        if($user){
+            if($user->getRoles()[0]=='ROLE_USER'){
+                return $this->render('userHome.html.twig',[
+                    'user' => $user
+                ]);
+            }
+            elseif($user->getRoles()[0]=='ROLE_ADMIN'){
+                return $this->redirectToRoute("adminHome");
+            }
+        }
+        else{
+            return $this->render('404.html.twig');
+        }
+    }
+    /**
+     * @Route("/admin", name="adminHome")
+     */
+    public function adminHome(){
+        $user=$this->getUser();
+        if($user){
+            return $this->render('adminHome.html.twig',[
+                'user' => $user
+            ]);
+        }
+        else{
+            return $this->render('404.html.twig');
+        }
+    }
+    /**
+     * @Route("/admin/orders" , name="ordersPage")
+     */
+    public function displayOrders(EntityManagerInterface $em, Request $request){
+        $orders=$em->getRepository(Orders::class)->findAll();
+        $statusForm=$this->createFormBuilder($orders)
+        ->add('status',ChoiceType::class,
+        [   'attr' => ['class' => 'form-control d-block']
+            ,'choices' => [
+            
+            'aan het koken' => 'aan het koken',
+            'te bezorgen',
+            'bezorgd'
+        ]])
+        ->getForm();
+        $statusForm->handleRequest($request);
+        ;
+        // dd($orders);
+        return $this->render('orders.html.twig',[
+            'orders' => $orders,
+            'statusForm' => $statusForm->createView()
         ]);
     }
-    
+    /**
+     * @Route("/admin/orders/delete/{id}", name="order_delete")
+     */
+    public function deleteOrder(Request $request, EntityManagerInterface $em , $id){
+        $order = $em->getRepository(Orders::class)->find($id);
+        $em->remove($order);
+        $em->flush();
+        $response = new Response();
+        $response->send();
+        $this->addFlash('deleteSuccess','Item successvol verwijderd');
+        return $this->render('orders.html.twig');
+    }
 }

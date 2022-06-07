@@ -5,7 +5,9 @@
 {% block body %}
 <div class="container w-75 pt-3">
     <form method="post">
-    
+    {% for item in app.flashes('registerMessege') %}
+        <p class="alert alert-success text-center">{{item}}</p>
+    {% endfor %}
     <h1 class="h3 mb-3 font-weight-normal">Log in:</h1>
     <label for="inputEmail">Email</label>
     <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>

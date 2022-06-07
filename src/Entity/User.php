@@ -5,10 +5,14 @@ namespace App\Entity;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping AS ORM;
+use Doctrine\ORM\Mapping\PrePersist;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints AS Assert;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+
+
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
@@ -22,6 +26,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $id;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
+    
+    /**
+     * @Assert\Type(
+     * type="string",
+     * message="email adres bestaat wel of niet goed ingevoerd"
+     * )
+     */
+    
     private $email;
 
     #[ORM\Column(type: 'json')]
@@ -47,6 +59,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: 'string', length: 255)]
     private $house_number;
+
+    // #[ORM\ManyToOne(targetEntity: Role::class, inversedBy: 'no')]
+    // #[ORM\JoinColumn(nullable: false)]
+    // private $role;
 
     public function __construct()
     {
@@ -87,7 +103,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
+        // $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
     }
@@ -212,5 +228,29 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    // public function getRole(): ?role
+    // {
+    //     return $this->role;
+    // }
+
+    // public function setRole(?role $role): self
+    // {
+    //     $this->role = $role;
+
+    //     return $this;
+    // }
+
+    // public function getRoleId(): ?int
+    // {
+    //     return $this->roleId;
+    // }
+
+    // public function setRoleId(?int $roleId)
+    // {
+    //     $this->role = $roleId;
+
+    //     return $this;
+    // }
 
 }

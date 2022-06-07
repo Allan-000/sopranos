@@ -4,6 +4,9 @@
 
 {% if orders[0].user is defined %}
      <div class="container">
+     {% for item in app.flashes('succesMessege') %}
+       <p class="alert alert-success text-center">{{item}}</p>
+     {% endfor %}
 <table class="table table-bordered table-hover mt-5">
   <thead>
     <tr>
